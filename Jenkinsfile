@@ -6,21 +6,20 @@ node{
       }
    
    stage('Docker Build') {
-     def app = docker.build "manee2k6/itrainbatman"
+     def app = docker.build "pythonapp"
     }
    
    stage("Tag & Push image"){
       withDockerRegistry([credentialsId: 'dockerID',url: ""]) {
-          sh 'docker tag manee2k6/itrainbatman manee2k6/itrainbatman:dev'
-          sh 'docker push manee2k6/itrainbatman:dev'
-          sh 'docker push manee2k6/itrainbatman:latest'
+          sh 'docker tag pythonapp ashithadocker/pythonapp:latest'
+          sh 'docker push ashithadocker/pythonapp:lates'
       }
     }
     stage("App deployment started"){
      sh 'oc login --token=t01XSPheqChA1n1QxmPCSJAwm5rFNYzb7FvRP9mmg6A --server=https://api.us-east-1.online-starter.openshift.com:6443'
     // sh 'oc new-project creativetech'
       
-     sh 'oc new-app shiddu/pythonimage:dev --name python'
+     sh 'oc new-app ashithadocker/pythonapp:latest --name python'
      sh 'oc expose svc python --name=python'
      sh 'oc status'
     }
